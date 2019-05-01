@@ -35,7 +35,8 @@ class Navbar extends Component
                     <div class = "container-fluid">
                         <ul class = "nav navbar-nav">
                             <li><Link to = "/home">Home Page</Link></li>
-                            <li><Link to = "/login">Login</Link></li>
+                            <li><Link to = "/login">Guest Login</Link></li>
+                            <li><Link to = "/emplogin">Employee Login</Link></li>
                             <li><Link to = "/create">Create a New User</Link></li>
                         </ul>
 

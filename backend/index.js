@@ -53,7 +53,8 @@ app.post('/create', function(req, res){
     var encryptPassword = null;
 
     bcrypt.hash(mysql.escape(req.body.password), 10, function(err, hash){
-
+        console.log(hash);
+        
         var sql = "INSERT INTO Guest (guestID, guestFName, guestLName, guestPhoneNumber, guestPassword) VALUES ( " +
         mysql.escape(req.body.guest_id) + ", " +
         mysql.escape(req.body.firstname) + ", " + 
@@ -90,7 +91,6 @@ app.post('/login', function(req, res){
     console.log("Hello from inside the (post) login backend..!");
 
     var guest_id = req.body.guest_id;
-    var password = req.body.password;
 
     var sql = "SELECT guestPassword From Guest WHERE guestID = " + 
     mysql.escape(guest_id);
@@ -101,8 +101,8 @@ app.post('/login', function(req, res){
             console.log("Is our query successful?");
             console.log(result[0].guestPassword);
 
-            bcrypt.compare(password, result[0].guestPassword, function(err, success){
-                if (success)
+            bcrypt.compare(req.body.password, result[0].guestPassword, function(err, success){
+                if (success == true)
                 {
                     console.log("Valid password!");
 

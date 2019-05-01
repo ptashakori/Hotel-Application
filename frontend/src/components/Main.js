@@ -4,6 +4,7 @@ import Create from './Create/Create';
 import Home from './Home/Home';
 import Navbar from './LandingPage/Navbar';
 import Login from './Login/Login';
+import empLogin from './Login/empLogin';
 
 // Create a Main Component
 class Main extends Component
@@ -17,6 +18,7 @@ class Main extends Component
                 <Route path = "/Home" component = {Home} />
                 <Route path = "/" component = {Navbar} />
                 <Route path = "/login" component = {Login} />
+                <Route path = "/emplogin" component = {empLogin} />
             </div>
         )
     }
