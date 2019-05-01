@@ -129,6 +129,43 @@ app.post('/login', function(req, res){
     })
 })
 
+app.post('/emplogin', function(req, res){
+    console.log("Hello from inside the (post) employee login backend..!");
+
+    var sql = "SELECT employeePassword From Employee WHERE employeeID = " + 
+    mysql.escape(employee_id);
+
+    con.query(sql, function(err, result){
+        if (result.length > 0)
+        {
+            bcrypt.compare(req.body.password, result[0].employeePassword, function(err, success){
+                if (success == true)
+                {
+                    console.log("Valid password!");
+
+                    res.cookie('cookie', guest_id, {maxAge: 900000, httpOnly: false, path: '/'});
+
+                    res.writeHead(200, {
+                        'Content-Type': 'text/plain'
+                    })
+
+                    res.end("Successful login!");
+                }
+                else
+                {
+                    console.log("Invalid password!");
+
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+
+                    res.end("Invalid credentials!");
+                }
+            })
+        }
+    })
+})
+
 app.listen(3001, function(req, res){
     console.log("Port 3001 is open and ready!");
 });

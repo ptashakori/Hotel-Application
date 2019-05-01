@@ -54,7 +54,7 @@ class empLogin extends Component
 
         axios.defaults.withCredentials = true;
 
-        axios.post('http://localhost:3001/login', data)
+        axios.post('http://localhost:3001/emplogin', data)
             .then(response => {
                 console.log("Status code: ", response.status);
 
