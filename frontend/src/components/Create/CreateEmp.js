@@ -103,42 +103,42 @@ class CreateEmp extends Component
                     <form>
                         <div style = {{width: '30%'}} class = "form-group">
                             Employee ID: <br />
-                            <input onChange = {this.emp_idHandler} type = "text" class = "form-control" name = "emp_id" placeholder = "Employee ID" required />
+                            <input onChange = {this.emp_idHandler} type = "text" class = "form-control" name = "emp_id" required />
                         </div>
 
                         <div style = {{width: '30%'}} class = "form-group">
                             <br />Employee Social Security Number: <br />
-                            <input onChange = {this.emp_ssnHandler} type = "text" class = "form-control" name = "emp_ssn" placeholder = "Employee SSN" required />   
+                            <input onChange = {this.emp_ssnHandler} type = "text" class = "form-control" name = "emp_ssn" required />   
                         </div>
 
                         <div style = {{width: '30%'}} class = "form-group">
                             <br />Employee First Name: <br />
-                            <input onChange = {this.emp_firstnameHandler} type = "text" class = "form-control" name = "emp_firstname" placeholder = "Employee First Name" required />
+                            <input onChange = {this.emp_firstnameHandler} type = "text" class = "form-control" name = "emp_firstname" required />
                         </div>
 
                         <div style = {{width: '30%'}} class = "form-group">
                             <br />Employee Last Name: <br />
-                            <input onChange = {this.emp_lastnameHandler} type = "text" class = "form-control" name = "emp_lastname" placeholder = "Employee Last Name" required />
+                            <input onChange = {this.emp_lastnameHandler} type = "text" class = "form-control" name = "emp_lastname" required />
                         </div>
 
                         <div style = {{width: '30%'}} class = "form-group">
                             <br />Employee Date of Birth: <br />
-                            <input onChange = {this.emp_dobHandler} type = "text" class = "form-control" name = "emp_dob" placeholder = "Employee DOB" required />
+                            <input onChange = {this.emp_dobHandler} type = "text" class = "form-control" name = "emp_dob" required />
                         </div>
 
                         <div style = {{width: '30%'}} class = "form-group">
                             <br />Employee Salary: <br />
-                            <input onChange = {this.emp_salaryHandler} type = "text" class = "form-control" name = "emp_salary" placeholder = "Employee Salary" required />
+                            <input onChange = {this.emp_salaryHandler} type = "text" class = "form-control" name = "emp_salary" required />
                         </div>
 
                         <div style = {{width: '30%'}} class = "form-group">
                             <br />Employee Password: <br />
-                            <input onChange = {this.emp_passwordHandler} type = "password" class = "form-control" name = "emp_password" placeholder = "Employee Password" required />
+                            <input onChange = {this.emp_passwordHandler} type = "password" class = "form-control" name = "emp_password" required />
                         </div>
 
                         <div style = {{width: '30%'}} class = "form-group">
                             <br />Employee Department Number: <br />
-                            <input onChange = {this.emp_dnoHandler} type = "text" class = "form-control" name = "emp_dno" placeholder = "Employee Dept No" required />
+                            <input onChange = {this.emp_dnoHandler} type = "text" class = "form-control" name = "emp_dno" required />
                         </div>
 
                         <div style = {{width: '30%'}}>

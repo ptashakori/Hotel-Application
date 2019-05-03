@@ -81,6 +81,39 @@ app.post('/create', function(request, response){
     }
 });
 
+app.post('/createemp', function(request, response){
+    console.log("Hello from inside the post create employee backend..!");
+    
+    console.log(request.body);
+
+    if (!request.body.emp_id || !request.body.emp_ssn || !request.body.emp_firstname || !request.body.emp_lastname || !request.body.emp_dob || !request.body.emp_salary || ! request.body.emp_password || !request.body.emp_dno)
+    {
+        response.status(400).json({success: false, message: "Please enter guest ID, first name, last name, phone number and password."});
+    }
+    else
+    {
+        var newEmployee = 
+        {
+            emp_id: request.body.emp_id,
+            emp_ssn: request.body.emp_ssn,
+            emp_firstname: request.body.emp_firstname,
+            emp_lastname: request.body.emp_lastname,
+            emp_dob: request.body.emp_dob,
+            emp_salary: request.body.emp_salary,
+            emp_password: request.body.emp_password,
+            emp_dno: request.body.emp_dno
+        };
+
+        // attempt to save employee
+        db.createEmployee(newEmployee, function(res){
+            response.status(201).json({success: true, message: "Successfully created new employee!"});
+        }, function(err){
+            console.log(err);
+            return response.status(400).json({success: false, message: "Could not create employee!"});
+        })
+    }
+});
+
 app.post('/login', function(request, response){
     console.log("Hello from inside the (post) login backend..!");
 

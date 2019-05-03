@@ -47,6 +47,47 @@ db.createUser = function(user, successCallback, failureCallback)
     })
 }
 
+db.createEmployee = function(employee, successCallback, failureCallback)
+{
+    var passwordHash;
+    crypt.createHash(employee.emp_password, function(res){
+        passwordHash = res;
+
+        con.connect(function(err){
+            if (err)
+            {
+                throw err;
+            }
+            else
+            {
+                console.log("MySQL connection successful!");
+                var sql = "INSERT INTO Employee (employeeID, employeeSSN, employeeFName, employeeLName, employeeDOB, employeeSalary, employeePassword, dno) VALUES (" +
+                mysql.escape(employee.emp_id) + ", " +
+                mysql.escape(employee.emp_ssn) + ", " + 
+                mysql.escape(employee.emp_firstname) + ", " + 
+                mysql.escape(employee.emp_lastname) + ", " + 
+                mysql.escape(employee.emp_dob) + ", " +
+                mysql.escape(employee.emp_salary) + ", " + 
+                mysql.escape(employee.emp_password) + ", " + 
+                mysql.escape(employee.emp_dno) + ")";
+                
+                con.query(sql, function(err, result){
+                    if (err)
+                    {
+                        console.log(err);
+                        failureCallback(err);
+                        return;
+                    }
+
+                    console.log("SUCCESS!");
+                    successCallback();
+                })
+
+            }
+        })
+    })
+}
+
 db.findUser = function(user, successCallback, failureCallback)
 {
     con.connect(function(err){
