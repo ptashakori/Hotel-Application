@@ -5,9 +5,8 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var mkdirp = require('mkdirp');
 
-const bcrypt = require('bcrypt');
-var crypt = require('./app/crypt.js');
-var db = require('./app/db');
+var Cryptr = require('cryptr');
+const cryptr = new Cryptr('secretKey');
 
 var jwt = require('jsonwebtoken');
 
@@ -51,34 +50,38 @@ app.get('/', function(req, res){
     res.send("Hello from index.js back end!");
 })
 
-app.post('/create', function(request, response){
-    console.log("Hello from inside the post create backend..!");
-    
-    console.log(request.body);
+app.post('/create', function(req, res){
+    console.log("Hello from inside the post create back end.. ");
 
-    if (!request.body.guest_id || !request.body.firstname || !request.body.lastname || !request.body.phone_number || !request.body.password)
-    {
-        response.status(400).json({success: false, message: "Please enter guest ID, first name, last name, phone number and password."});
-    }
-    else
-    {
-        var newUser = 
+    const encryptPassword = cryptr.encrypt(req.body.password);
+
+    var sql = "INSERT INTO Guest (guestID, guestFName, guestLName, guestPhoneNumber, guestPassword) VALUES ( " +
+    mysql.escape(req.body.guest_id) + ", " +
+    mysql.escape(req.body.firstname) + ", " +
+    mysql.escape(req.body.lastname) + ", " +
+    mysql.escape(req.body.phone_number) + ", " +
+    mysql.escape(encryptPassword) + ")";
+
+    con.query(sql, function(err, result){
+        if (err)
         {
-            guest_id: request.body.guest_id,
-            firstname: request.body.firstname,
-            lastname: request.body.lastname,
-            phone_number: request.body.phone_number,
-            password: request.body.password
-        };
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
 
-        // attempt to save user
-        db.createUser(newUser, function(res){
-            response.status(201).json({success: true, message: "Successfully created new user!"});
-        }, function(err){
-            console.log(err);
-            return response.status(400).json({success: false, message: "Could not create user!"});
-        })
-    }
+            res.end("Error while creating guest..");
+            console.log("Error while creating guest!");
+        }
+        else
+        {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+
+            res.end('Guest created successfully!');
+            console.log("Guest created successfully!");
+        }
+    })
 });
 
 app.post('/createemp', function(request, response){
@@ -114,57 +117,45 @@ app.post('/createemp', function(request, response){
     }
 });
 
-app.post('/login', function(request, response){
-    console.log("Hello from inside the (post) login backend..!");
+app.post('/login', function(req, res){
+    console.log("Hello from inside the post login back end.. ");
 
-    db.findUser({
-        guest_id: request.body.guest_id
+    var guest_id = req.body.guest_id;
+    var password = req.body.password;
 
-    }, function(res){
+    var sql = "SELECT guestPassword FROM Guest WHERE guestID = " + 
+    mysql.escape(guest_id);
+    con.query(sql, function(err, result){
 
-        var user = 
+        console.log(result[0].guestPassword);
+
+        const decryptPassword = cryptr.decrypt(result[0].guestPassword);
+        console.log(decryptPassword);
+
+        if (password === decryptPassword)
         {
-            guest_id: res[0].guestID,
-            firstname: res[0].guestFName,
-            lastname: res[0].guestLName,
-            phone_number: res[0].guestPhoneNumber,
-            password: res[0].guestPassword
-        };
+            console.log("Valid password!");
 
-        // check if password matches
-        crypt.compareHash(request.body.password, user.password, function(err, isMatch){
-            if (isMatch && !err)
-            {
-                // create token if the password matched and no error was thrown
-                var token = jwt.sign(user, "Passphrase for encryption should be 45-50 chars long", {
-                    expiresIn: 10080 // in seconds
-                });
+            res.cookie('cookie', req.body.guest_id, {maxAge: 900000, httpOnly: false, path : '/'});
+            //req.session.user = result;
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
 
-                console.log("Login successful!");
-                response.cookie('cookie', user.guest_id, {maxAge: 900000, httpOnly: false, path: '/'});
-                
-                response.status(200).json({success: true, token: 'JWT ' + token});
-            }
-            else
-            {
-                console.log("Login NOT successful!");
+            res.end("Successful login");
+            console.log("Successful login!");
+        }
+        else
+        {
+            console.log("Invalid password!");
 
-                response.status(401).json({success: false, message: "Authentication failed. Passwords do not match!"});
-            }
-        }, function(err){
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
 
-            console.log("Login NOT successful!");
-            
-            console.log(err);
-            response.status(401).json({success: false, message: "Authentication failed. Guest not found!"});
-
-        }, function(err){
-
-            console.log("Login NOT successful!");
-
-            console.log(err);
-            response.status(401).json({success: false, message: "Authentication failed. Guest not found!"});
-        });
+            res.end("Invalid credentials");
+            console.log("Invalid credentials!");
+        }
     })
 })
 
