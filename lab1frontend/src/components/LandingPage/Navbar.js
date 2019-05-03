@@ -34,7 +34,7 @@ class Navbar extends Component
             console.log("Not able to read cookie! Try logging in.. ");
             navLogin = (
                 <ul class = "nav navbar-nav navbar-right">
-                    <li><Link to = "/login"><span class = "glyphicon glyphicon-log-in"></span>Login</Link></li>
+                    <li><Link to = "/login"><span class = "glyphicon glyphicon-log-in"></span>Guest Login</Link></li>
                 </ul>
             )
         }
@@ -55,6 +55,8 @@ class Navbar extends Component
                     <ul class = "nav navbar-nav">
                         <li class = "active"><Link to = "/home">Home</Link></li>
                         <li><Link to = "/create">Create Guest Account</Link></li>
+                        <li><Link to = "/empcreate">Create Employee Account</Link></li>
+                        <li><Link to = "/empLogin">Employee Login</Link></li>
                     </ul>
                     {navLogin}
                 </div>

@@ -89,6 +89,45 @@ app.post('/login', function(req, res){
     })
 })
 
+app.post('/emplogin', function(req, res){
+    console.log("Hello from inside the post employee login back end.. ");
+
+    var emp_id = req.body.emp_id;
+    var password = req.body.password;
+
+    var sql = "SELECT employeePassword FROM Employee WHERE employeeID = " + 
+    mysql.escape(emp_id);
+    con.query(sql, function(err, result){
+
+        const decryptPassword = cryptr.decrypt(result[0].employeePassword);
+
+        if (password === decryptPassword)
+        {
+            console.log("Valid password!");
+
+            res.cookie('cookie', req.body.emp_id, {maxAge: 900000, httpOnly: false, path : '/'});
+            //req.session.user = result;
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+
+            res.end("Successful login");
+            console.log("Successful login!");
+        }
+        else
+        {
+            console.log("Invalid password!");
+
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+
+            res.end("Invalid credentials");
+            console.log("Invalid credentials!");
+        }
+    })
+})
+
 app.post('/create', function(req, res){
     console.log("Hello from inside the post create back end.. ");
 
@@ -119,6 +158,43 @@ app.post('/create', function(req, res){
 
             res.end('Guest created successfully!');
             console.log("Guest created successfully!");
+        }
+    })
+})
+
+app.post('/empcreate', function(req, res){
+    console.log("Hello from inside the post employee create back end.. ");
+
+    const encryptPassword = cryptr.encrypt(req.body.password);
+
+    var sql = "INSERT INTO Employee (employeeID, employeeSSN, employeeFName, employeeLName, employeeDOB, employeeSalary, employeePassword, dno) VALUES ( " +
+    mysql.escape(req.body.emp_id) + ", " +
+    mysql.escape(req.body.ssn) + ", " +
+    mysql.escape(req.body.firstname) + ", " +
+    mysql.escape(req.body.lastname) + ", " + 
+    mysql.escape(req.body.dob) + ", " +
+    mysql.escape(req.body.salary) + ", " +
+    mysql.escape(encryptPassword) + ", " + 
+    mysql.escape(req.body.dno) + ")";
+
+    con.query(sql, function(err, result){
+        if (err)
+        {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+
+            res.end("Error while creating employee..");
+            console.log("Error while creating employee!");
+        }
+        else
+        {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+
+            res.end('Employee created successfully!');
+            console.log("Employee created successfully!");
         }
     })
 })
