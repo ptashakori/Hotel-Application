@@ -37,6 +37,7 @@ class Navbar extends Component
                             <li><Link to = "/emplogin">Employee Login</Link></li>
                             <li><Link to = "/create">Create a New User</Link></li>
                             <li><Link to = "/createemp">Create a New Employee</Link></li>
+                            <li><Link to = "/" onClick = {this.handleLogout}><span class = "glyphicon glyphicon-user"></span>Logout</Link></li>
                         </ul>
                     </div>
                 </nav>

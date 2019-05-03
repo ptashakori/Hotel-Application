@@ -68,7 +68,7 @@ db.createEmployee = function(employee, successCallback, failureCallback)
                 mysql.escape(employee.emp_lastname) + ", " + 
                 mysql.escape(employee.emp_dob) + ", " +
                 mysql.escape(employee.emp_salary) + ", " + 
-                mysql.escape(employee.emp_password) + ", " + 
+                mysql.escape(passwordHash) + ", " + 
                 mysql.escape(employee.emp_dno) + ")";
                 
                 con.query(sql, function(err, result){
@@ -113,6 +113,40 @@ db.findUser = function(user, successCallback, failureCallback)
                 else
                 {
                     console.log("Guest found!");
+                    console.log(JSON.stringify(result[0]));
+
+                    successCallback(result);
+                }
+            })
+        }
+    })
+}
+
+db.findEmployee = function(employee, successCallback, failureCallback)
+{
+    con.connect(function(err){
+        if (err)
+        {
+            throw err;
+        }
+        else
+        {
+            console.log("MySQL connection successful!");
+
+            var sql = "SELECT * FROM Employee WHERE employeeID = " + 
+            mysql.escape(employee.emp_id);
+
+            con.query(sql, function(err, result){
+                if (err)
+                {
+                    console.log("Unable to find employee!");
+
+                    failureCallback(err);
+                    return;
+                }
+                else
+                {
+                    console.log("Employee found!");
                     console.log(JSON.stringify(result[0]));
 
                     successCallback(result);

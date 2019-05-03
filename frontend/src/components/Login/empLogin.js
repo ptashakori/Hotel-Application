@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import '../../App.css';
 import axios from 'axios';
-import cookie from 'react-cookies';
+// import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
+import {connect} from 'react-redux';
+import {submitempLogin} from '../../actions/emplogin.js';
 
 class empLogin extends Component
 {
@@ -12,14 +14,12 @@ class empLogin extends Component
 
         this.state = 
         {
-            employee_id: "",
-            password: "",
+            emp_id: "",
+            emp_password: "",
             authFlag: false
         }
 
-        this.employee_idHandler = this.employee_idHandler.bind(this);
-        this.passwordHandler = this.passwordHandler.bind(this);
-        this.submitLogin = this.submitLogin.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     componentWillMount(){
@@ -28,17 +28,10 @@ class empLogin extends Component
         })
     }
 
-    employee_idHandler = (e) => 
+    onChange(e)
     {
         this.setState({
-            employee_id: e.target.value
-        })
-    }
-
-    passwordHandler = (e) => 
-    {
-        this.setState({
-            password: e.target.value
+            [e.target.name]: e.target.value
         })
     }
 
@@ -48,37 +41,22 @@ class empLogin extends Component
 
         const data = 
         {
-            employee_id: this.state.employee_id,
-            password: this.state.password
+            emp_id: this.state.emp_id,
+            emp_password: this.state.emp_password
         }
 
+        this.props.submitempLogin(data);
+
         axios.defaults.withCredentials = true;
-
-        axios.post('http://localhost:3001/emplogin', data)
-            .then(response => {
-                console.log("Status code: ", response.status);
-
-                if (response.status === 200)
-                {
-                    this.setState({
-                        authFlag: true
-                    })
-                }
-                else
-                {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
     }
 
     render()
     {
         let redirectVar = null;
 
-        if (cookie.load('cookie'))
+        if (this.props.empLoginStateStore.resultAuth)
         {
+            console.log("We get here right?");
             redirectVar = <Redirect to = "/home" />
         }
 
@@ -90,16 +68,16 @@ class empLogin extends Component
                     <div class = "login-form">
                         <div class = "main-div">
                             <div class = "panel">
-                                <h2>Employee Login:</h2>
+                                <h2>Login:</h2>
                                 <p>Please enter your Employee ID and password below:</p>
                             </div>
 
                             <div class = "form-group">
-                                <input onChange = {this.employee_idHandler} type = "text" class = "form-control" name = "employee_id" placeholder = "Employee ID" required />
+                                <input onChange = {this.onChange} type = "text" class = "form-control" name = "emp_id" placeholder = "Employee ID" required />
                             </div>
 
                             <div class = "form-group">
-                                <input onChange = {this.passwordHandler} type = "password" class = "form-control" name = "password" placeholder = "Password" required />
+                                <input onChange = {this.onChange} type = "password" class = "form-control" name = "emp_password" placeholder = "Password" required />
                             </div>
 
                             <button onClick = {this.submitLogin} class = "btn btn-primary">Login</button>
@@ -111,4 +89,8 @@ class empLogin extends Component
     }
 }
 
-export default empLogin;
+const mapStateToProps = state => ({
+    empLoginStateStore: state.emplogin
+})
+
+export default connect(mapStateToProps, {submitempLogin})(empLogin);

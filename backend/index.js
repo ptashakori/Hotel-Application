@@ -168,40 +168,60 @@ app.post('/login', function(request, response){
     })
 })
 
-app.post('/emplogin', function(req, res){
+app.post('/emplogin', function(request, response){
     console.log("Hello from inside the (post) employee login backend..!");
 
-    var sql = "SELECT employeePassword From Employee WHERE employeeID = " + 
-    mysql.escape(employee_id);
+    db.findEmployee({
+        emp_id: request.body.emp_id
 
-    con.query(sql, function(err, result){
-        if (result.length > 0)
+    }, function(res){
+
+        var employee = 
         {
-            bcrypt.compare(req.body.password, result[0].employeePassword, function(err, success){
-                if (success == true)
-                {
-                    console.log("Valid password!");
+            emp_id: res[0].employeeID,
+            emp_ssn: res[0].employeeSSN,
+            emp_firstname: res[0].employeeFName,
+            emp_lastname: res[0].employeeLName,
+            emp_dob: res[0].employeeDOB,
+            emp_salary: res[0].employeeSalary,
+            emp_password: res[0].employeePassword,
+            emp_dno: res[0].dno
+        };
 
-                    res.cookie('cookie', guest_id, {maxAge: 900000, httpOnly: false, path: '/'});
+        // check if password matches
+        crypt.compareHash(request.body.emp_password, employee.emp_password, function(err, isMatch){
+            if (isMatch && !err)
+            {
+                // create token if the password matched and no error was thrown
+                var token = jwt.sign(employee, "Passphrase for encryption should be 45-50 chars long", {
+                    expiresIn: 10080 // in seconds
+                });
 
-                    res.writeHead(200, {
-                        'Content-Type': 'text/plain'
-                    })
+                console.log("Login successful!");
+                response.cookie('cookie', employee.emp_id, {maxAge: 900000, httpOnly: false, path: '/'});
+                
+                response.status(200).json({success: true, token: 'JWT ' + token});
+            }
+            else
+            {
+                console.log("Login NOT successful!");
 
-                    res.end("Successful login!");
-                }
-                else
-                {
-                    console.log("Invalid password!");
+                response.status(401).json({success: false, message: "Authentication failed. Passwords do not match!"});
+            }
+        }, function(err){
 
-                    res.writeHead(400, {
-                        'Content-Type': 'text/plain'
-                    })
+            console.log("Login NOT successful!");
+            
+            console.log(err);
+            response.status(401).json({success: false, message: "Authentication failed. Employee not found!"});
 
-                    res.end("Invalid credentials!");
-                }
-            })
-        }
+        }, function(err){
+
+            console.log("Login NOT successful!");
+
+            console.log(err);
+            response.status(401).json({success: false, message: "Authentication failed. Employee not found!"});
+        });
     })
 })
 
