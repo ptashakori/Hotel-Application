@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import '../../App.css';
 import axios from 'axios';
-import cookie from 'react-cookies';
+// import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
+import {connect} from 'react-redux';
+import {submitLogin} from '../../actions/login.js';
 
 class Login extends Component
 {
@@ -17,9 +19,7 @@ class Login extends Component
             authFlag: false
         }
 
-        this.guest_idHandler = this.guest_idHandler.bind(this);
-        this.passwordHandler = this.passwordHandler.bind(this);
-        this.submitLogin = this.submitLogin.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     componentWillMount(){
@@ -28,17 +28,10 @@ class Login extends Component
         })
     }
 
-    guest_idHandler = (e) => 
+    onChange(e)
     {
         this.setState({
-            guest_id: e.target.value
-        })
-    }
-
-    passwordHandler = (e) => 
-    {
-        this.setState({
-            password: e.target.value
+            [e.target.name]: e.target.value
         })
     }
 
@@ -52,33 +45,18 @@ class Login extends Component
             password: this.state.password
         }
 
+        this.props.submitLogin(data);
+
         axios.defaults.withCredentials = true;
-
-        axios.post('http://localhost:3001/login', data)
-            .then(response => {
-                console.log("Status code: ", response.status);
-
-                if (response.status === 200)
-                {
-                    this.setState({
-                        authFlag: true
-                    })
-                }
-                else
-                {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
     }
 
     render()
     {
         let redirectVar = null;
 
-        if (cookie.load('cookie'))
+        if (this.props.loginStateStore.resultAuth)
         {
+            console.log("We get here right?");
             redirectVar = <Redirect to = "/home" />
         }
 
@@ -95,11 +73,11 @@ class Login extends Component
                             </div>
 
                             <div class = "form-group">
-                                <input onChange = {this.guest_idHandler} type = "text" class = "form-control" name = "guest_id" placeholder = "Guest ID" required />
+                                <input onChange = {this.onChange} type = "text" class = "form-control" name = "guest_id" placeholder = "Guest ID" required />
                             </div>
 
                             <div class = "form-group">
-                                <input onChange = {this.passwordHandler} type = "password" class = "form-control" name = "password" placeholder = "Password" required />
+                                <input onChange = {this.onChange} type = "password" class = "form-control" name = "password" placeholder = "Password" required />
                             </div>
 
                             <button onClick = {this.submitLogin} class = "btn btn-primary">Login</button>
@@ -111,4 +89,8 @@ class Login extends Component
     }
 }
 
-export default Login;
+const mapStateToProps = state => ({
+    loginStateStore: state.login
+})
+
+export default connect(mapStateToProps, {submitLogin})(Login);

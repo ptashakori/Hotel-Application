@@ -108,6 +108,8 @@ app.post('/login', function(request, response){
                 });
 
                 console.log("Login successful!");
+                response.cookie('cookie', user.guest_id, {maxAge: 900000, httpOnly: false, path: '/'});
+                
                 response.status(200).json({success: true, token: 'JWT ' + token});
             }
             else
@@ -122,7 +124,7 @@ app.post('/login', function(request, response){
             
             console.log(err);
             response.status(401).json({success: false, message: "Authentication failed. Guest not found!"});
-            
+
         }, function(err){
 
             console.log("Login NOT successful!");

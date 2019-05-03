@@ -18,13 +18,11 @@ class Navbar extends Component
 
     render()
     {
-        let navLogin = null;
-
         let redirectVar = null;
 
         if (cookie.load('cookie'))
         {
-            redirectVar = <Redirect to = "/" />
+            redirectVar = <Redirect to = "/home" />
         }
 
         return(
@@ -39,8 +37,6 @@ class Navbar extends Component
                             <li><Link to = "/emplogin">Employee Login</Link></li>
                             <li><Link to = "/create">Create a New User</Link></li>
                         </ul>
-
-                        {navLogin}
                     </div>
                 </nav>
             </div>
