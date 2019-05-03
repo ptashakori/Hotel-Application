@@ -12,12 +12,12 @@ class Login extends Component
 
         this.state = 
         {
-            guest_id: "",
+            email: "",
             password: "",
             authFlag: false
         }
 
-        this.guest_idHandler = this.guest_idHandler.bind(this);
+        this.emailHandler = this.emailHandler.bind(this);
         this.passwordHandler = this.passwordHandler.bind(this);
         this.submitLogin = this.submitLogin.bind(this);
     }
@@ -28,10 +28,10 @@ class Login extends Component
         })
     }
 
-    guest_idHandler = (e) =>
+    emailHandler = (e) =>
     {
         this.setState({
-            guest_id: e.target.value
+            email: e.target.value
         })
     }
 
@@ -50,11 +50,13 @@ class Login extends Component
 
         const data = 
         {
-            guest_id: this.state.guest_id,
+            email: this.state.email,
             password: this.state.password
         }
 
         axios.defaults.withCredentials = true;
+
+        axios.post('http://localhost:3001/profile', data);
 
         axios.post('http://localhost:3001/login', data)
             .then(response => {
@@ -91,12 +93,12 @@ class Login extends Component
                 <div class = "login-form">
                     <div class = "main-div">
                         <div class = "panel">
-                            <h2>Guest Login:</h2>
-                            <p>Please enter your Guest ID and password:</p>
+                            <h2>Login:</h2>
+                            <p>Please enter your Canvas email and password:</p>
                         </div>
 
                         <div class = "form-group">
-                            <input onChange = {this.guest_idHandler} type = "text" class = "form-control" name = "guest_id" placeholder = "Guest ID" required />
+                            <input onChange = {this.emailHandler} type = "text" class = "form-control" name = "email" placeholder = "Email" required />
                         </div>
 
                         <div class = "form-group">

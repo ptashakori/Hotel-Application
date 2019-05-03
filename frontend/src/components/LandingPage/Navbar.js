@@ -31,7 +31,7 @@ class Navbar extends Component
 
                 <nav class = "navbar navbar-inverse">
                     <div class = "container-fluid">
-                        <ul class = "nav navbar-nav">
+                        <ul class = "nav navbar-nav-right top-nav">
                             <li><Link to = "/home">Home Page</Link></li>
                             <li><Link to = "/login">Guest Login</Link></li>
                             <li><Link to = "/create">Create a New User</Link></li>
