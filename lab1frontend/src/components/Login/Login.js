@@ -12,12 +12,12 @@ class Login extends Component
 
         this.state = 
         {
-            email: "",
+            guest_id: "",
             password: "",
             authFlag: false
         }
 
-        this.emailHandler = this.emailHandler.bind(this);
+        this.guest_idHandler = this.guest_idHandler.bind(this);
         this.passwordHandler = this.passwordHandler.bind(this);
         this.submitLogin = this.submitLogin.bind(this);
     }
@@ -28,10 +28,10 @@ class Login extends Component
         })
     }
 
-    emailHandler = (e) =>
+    guest_idHandler = (e) =>
     {
         this.setState({
-            email: e.target.value
+            guest_id: e.target.value
         })
     }
 
@@ -50,7 +50,7 @@ class Login extends Component
 
         const data = 
         {
-            email: this.state.email,
+            guest_id: this.state.guest_id,
             password: this.state.password
         }
 
@@ -93,12 +93,12 @@ class Login extends Component
                 <div class = "login-form">
                     <div class = "main-div">
                         <div class = "panel">
-                            <h2>Login:</h2>
-                            <p>Please enter your Canvas email and password:</p>
+                            <h2>Guest Login:</h2>
+                            <p>Please enter your Guest ID and password:</p>
                         </div>
 
                         <div class = "form-group">
-                            <input onChange = {this.emailHandler} type = "text" class = "form-control" name = "email" placeholder = "Email" required />
+                            <input onChange = {this.guest_idHandler} type = "text" class = "form-control" name = "guest_id" placeholder = "Guest ID" required />
                         </div>
 
                         <div class = "form-group">

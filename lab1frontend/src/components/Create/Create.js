@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
 import '../../App.css';
 import axios from 'axios';
-//import {RadioGroup, RadioButton} from 'react-radio-buttons';
-//import cookie from 'react-cookies';
-//import {Link} from 'react-router-dom';
-//import {Redirect} from 'react-router';
 
 class Create extends Component
 {
@@ -14,43 +10,54 @@ class Create extends Component
 
         this.state = 
         {
-            name: "",
-            email: "",
-            password: "",
-            role: ""
+            guest_id: "",
+            firstname: "",
+            lastname: "",
+            phone_number: "",
+            password: ""
         }
 
-        this.nameHandler = this.nameHandler.bind(this);
-        this.emailHandler = this.emailHandler.bind(this);
-        this.passwordHandler = this.passwordHandler.bind(this);
-        this.roleHandler = this.roleHandler.bind(this);
+        this.guest_idHandler = this.guest_idHandler.bind(this);
+        this.firstname_Handler = this.firstname_Handler.bind(this);
+        this.lastname_Handler = this.lastname_Handler.bind(this);
+        this.phone_numberHandler = this.phone_numberHandler.bind(this);
+        this.password_Handler = this.password_Handler.bind(this);
+
+        this.submitCreate = this.submitCreate.bind(this);
     }
 
-    nameHandler = (e) => 
+    guest_idHandler = (e) => 
     {
         this.setState({
-            name: e.target.value
+            guest_id: e.target.value
         })
     }
 
-    emailHandler = (e) => 
+    firstname_Handler = (e) => 
     {
         this.setState({
-            email: e.target.value
+            firstname: e.target.value
         })
     }
 
-    passwordHandler = (e) => 
+    lastname_Handler = (e) => 
+    {
+        this.setState({
+            lastname: e.target.value
+        })
+    }
+
+    phone_numberHandler = (e) => 
+    {
+        this.setState({
+            phone_number: e.target.value
+        })
+    }
+
+    password_Handler = (e) => 
     {
         this.setState({
             password: e.target.value
-        })
-    }
-
-    roleHandler = (e) => 
-    {
-        this.setState({
-            role: e.target.value
         })
     }
 
@@ -58,10 +65,11 @@ class Create extends Component
     {
         const data = 
         {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password,
-            role: this.state.role
+            guest_id: this.state.guest_id,
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            phone_number: this.state.phone_number,
+            password: this.state.password
         }
 
         axios.post('http://localhost:3001/create', data);
@@ -74,34 +82,33 @@ class Create extends Component
                 <div class = "login-form">
                     <div class = "main-div">
                         <div class = "panel">
-                            <h2>Create a New User:</h2>
-                            <p>Please enter your name, email and a password to set up a Canvas account:</p>
+                            <h2>Create a New Guest Account:</h2>
+                            <p>Please enter your Guest ID, first name, last name, phone number and a password to set up an account:</p>
                         </div>
 
                         <div class = "form-group">
-                            <input onChange = {this.nameHandler} type = "text" class = "form-control" name = "name" placeholder = "Name" />
+                            <input onChange = {this.guest_idHandler} type = "text" class = "form-control" name = "guest_id" placeholder = "Guest ID" />
                         </div>
 
                         <div class = "form-group">
-                            <input onChange = {this.emailHandler} type = "text" class = "form-control" name = "email" placeholder = "Email" />
+                            <input onChange = {this.firstname_Handler} type = "text" class = "form-control" name = "firstname" placeholder = "First name" />
                         </div>
 
                         <div class = "form-group">
-                            <input onChange = {this.passwordHandler} type = "password" class = "form-control" name = "password" placeholder = "Password" />
+                            <input onChange = {this.lastname_Handler} type = "text" class = "form-control" name = "lastname" placeholder = "Last name" />
+                        </div>
+
+                        <div class = "form-group">
+                            <input onChange = {this.phone_numberHandler} type = "text" class = "form-control" name = "phone_number" placeholder = "Phone number" />
+                        </div>
+
+                        <div class = "form-group">
+                            <input onChange = {this.password_Handler} type = "password" class = "form-control" name = "password" placeholder = "Password" />
                         </div>
 
                         <br></br>
 
-                        Please check whether you are a student or a part of our faculty:
-                        <br></br>
-
-                        <input type = "radio" name = "student" onChange = {this.roleHandler} value = "student"/>Student
-                        <input type = "radio" name = "faculty" onChange = {this.roleHandler} value = "faculty"/>Faculty
-
-                        <br></br>
-                        <br></br>
-
-                        <button onClick = {this.submitCreate} class = "btn btn-primary">Create User</button>
+                        <button onClick = {this.submitCreate} class = "btn btn-primary">Create Account</button>
                     </div>
                 </div>
             </div>
