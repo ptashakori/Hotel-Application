@@ -36,6 +36,7 @@ class Navbar extends Component
                             <li><Link to = "/login">Guest Login</Link></li>
                             <li><Link to = "/emplogin">Employee Login</Link></li>
                             <li><Link to = "/create">Create a New User</Link></li>
+                            <li><Link to = "/createemp">Create a New Employee</Link></li>
                         </ul>
                     </div>
                 </nav>
