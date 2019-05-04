@@ -28,8 +28,6 @@ var con = mysql.createConnection({
     database: 'Hotel'
 })
 
-var profileEmail = null;
-
 con.connect(function(err){
     if (err)
     {
@@ -50,11 +48,16 @@ app.get('/', function(req, res){
     res.send("Hello from index.js back end!");
 })
 
+var guest = null;
+var employee = null;
+
 app.post('/login', function(req, res){
     console.log("Hello from inside the post login back end.. ");
 
     var guest_id = req.body.guest_id;
     var password = req.body.password;
+
+    var guest = guest_id;
 
     var sql = "SELECT guestPassword FROM Guest WHERE guestID = " + 
     mysql.escape(guest_id);
@@ -94,6 +97,8 @@ app.post('/emplogin', function(req, res){
 
     var emp_id = req.body.emp_id;
     var password = req.body.password;
+
+    var employee = emp_id;
 
     var sql = "SELECT employeePassword FROM Employee WHERE employeeID = " + 
     mysql.escape(emp_id);
