@@ -59,11 +59,13 @@ app.post('/login', function(req, res){
 
     var guest = guest_id;
 
-    var sql = "SELECT guestPassword FROM Guest WHERE guestID = " + 
-    mysql.escape(guest_id);
+    var sql = "CALL getGuestPassword ( " +
+    mysql.escape(guest) + ")";
+
     con.query(sql, function(err, result){
 
-        const decryptPassword = cryptr.decrypt(result[0].guestPassword);
+        console.log(result);
+        const decryptPassword = cryptr.decrypt(result[0][0].guestPassword);
 
         if (password === decryptPassword)
         {
@@ -100,11 +102,12 @@ app.post('/emplogin', function(req, res){
 
     var employee = emp_id;
 
-    var sql = "SELECT employeePassword FROM Employee WHERE employeeID = " + 
-    mysql.escape(emp_id);
+    var sql = "CALL getEmployeePassword (" + 
+    mysql.escape(employee) + ")";
+
     con.query(sql, function(err, result){
 
-        const decryptPassword = cryptr.decrypt(result[0].employeePassword);
+        const decryptPassword = cryptr.decrypt(result[0][0].employeePassword);
 
         if (password === decryptPassword)
         {
@@ -138,7 +141,7 @@ app.post('/create', function(req, res){
 
     const encryptPassword = cryptr.encrypt(req.body.password);
 
-    var sql = "INSERT INTO Guest (guestID, guestFName, guestLName, guestPhoneNumber, guestPassword) VALUES ( " +
+    var sql = "CALL createGuest (" +
     mysql.escape(req.body.guest_id) + ", " +
     mysql.escape(req.body.firstname) + ", " +
     mysql.escape(req.body.lastname) + ", " + 
@@ -172,7 +175,7 @@ app.post('/empcreate', function(req, res){
 
     const encryptPassword = cryptr.encrypt(req.body.password);
 
-    var sql = "INSERT INTO Employee (employeeID, employeeSSN, employeeFName, employeeLName, employeeDOB, employeeSalary, employeePassword, dno) VALUES ( " +
+    var sql = "CALL createEmployee (" +
     mysql.escape(req.body.emp_id) + ", " +
     mysql.escape(req.body.ssn) + ", " +
     mysql.escape(req.body.firstname) + ", " +
